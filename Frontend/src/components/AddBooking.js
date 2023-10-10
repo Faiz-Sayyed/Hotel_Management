@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 
-const AddBooking = ({ rooms, setRooms }) => {
+const AddBooking = ({rooms, setRooms, allBookings, setAllBookings}) => {
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
   const [startDate, setStartDate] = useState(Date.now());
@@ -9,8 +10,32 @@ const AddBooking = ({ rooms, setRooms }) => {
   const [endTime, setEndTime] = useState('');
   const [roomType, setRoomType] = useState('');
 
-  const addBooking = () => {
+  const addBooking = async () => {
     console.log(email, number, startDate, endDate, startTime, endTime, roomType);
+
+    const start = new Date(`${startDate} ${startTime}`);
+    const end = new Date(`${endDate} ${endTime}`);
+
+    let roomPrice = 0;
+    rooms.forEach((room) => {
+      if (room.type === roomType) {
+        roomPrice = room.price;
+      }
+    })
+
+    const price = ((end - start) / (1000 * 3600)) * roomPrice;
+    console.log(price);
+
+    // await axios.post('http://localhost:5000/api/v1/addBooking', {
+    //   email: email,
+    //   type: roomType,
+    //   start: start,
+    //   end: end,
+    //   price: price
+    // })
+    //   .then((response) => {
+    //     setRooms(response.data);
+    //   })
   }
 
   return (
@@ -32,6 +57,7 @@ const AddBooking = ({ rooms, setRooms }) => {
             className="w-full p-2 border border-black rounded"
             onChange={(e) => setRoomType(e.target.value)}
           >
+            <option value="">Select</option>
             {
               rooms.map((room, key) => (
                 <option key={key} value={room.type}>{room.type}</option>
@@ -56,7 +82,7 @@ const AddBooking = ({ rooms, setRooms }) => {
           <label className="block mb-2">Start Date:</label>
           <input
             type='date'
-            onChange={(date) => setStartDate(date)}
+            onChange={(e) => setStartDate(e.target.value)}
             className="w-full p-2 border border-black rounded"
             required
           />
@@ -65,7 +91,7 @@ const AddBooking = ({ rooms, setRooms }) => {
           <label className="block mb-2">End Date:</label>
           <input
             type='date'
-            onChange={(date) => setEndDate(date)}
+            onChange={(e) => setEndDate(e.target.value)}
             className="w-full p-2 border border-black rounded"
             required
           />

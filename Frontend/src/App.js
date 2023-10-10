@@ -26,7 +26,7 @@ const App = () => {
 
       <RoomDetailsSection rooms={rooms} setRooms={setRooms} />
 
-      <AddBooking rooms={rooms} setRooms={setRooms} />
+      <AddBooking rooms={rooms} setRooms={setRooms} allBookings={allBookings} setAllBookings={setAllBookings} />
 
       <div>
         {
